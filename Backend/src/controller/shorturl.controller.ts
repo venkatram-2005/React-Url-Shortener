@@ -38,7 +38,7 @@ export const createShortUrl = async (req: Request, res: Response): Promise<void>
       expiry,
     });
 
-    const fullShortUrl = `$https://${req.get("host")}/${code}`;
+    const fullShortUrl = `https://${req.get("host")}/${code}`;
 
     res.status(201).json({
       shortLink: fullShortUrl,
