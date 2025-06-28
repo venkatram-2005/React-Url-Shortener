@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'https://react-url-shortener-01k6.onrender.com'; // replace this
+const API_BASE = 'https://react-short-url.vercel.app'; // replace this
 
 export const createShortUrl = async (url: string, validity: number) => {
   const response = await axios.post(`${API_BASE}/shorturls`, {
