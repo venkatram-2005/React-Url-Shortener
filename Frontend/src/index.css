@@ -1,0 +1,97 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Theme background overrides */
+body.light {
+  background-color: #f5f7fa;
+  color: #1a1a1a;
+}
+
+body.dark {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* Navbar */
+.navbar {
+  height: 64px;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1976d2;
+  color: white;
+}
+
+/* Main content layout */
+.main-container {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  padding: 1.5rem;
+  min-height: calc(100vh - 64px);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Section containers */
+.section {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow-y: auto;
+  transition: background-color 0.3s ease;
+}
+
+/* Dark theme override */
+body.dark .section {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollable stats section */
+.stats-section {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+/* Optional theme toggle */
+.theme-toggle {
+  color: inherit;
+}
+
+/* Scrollbar for stats (optional styling) */
+.stats-section::-webkit-scrollbar {
+  width: 8px;
+}
+.stats-section::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.4);
+  border-radius: 10px;
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+
+  .navbar {
+    padding: 0 1rem;
+  }
+}
