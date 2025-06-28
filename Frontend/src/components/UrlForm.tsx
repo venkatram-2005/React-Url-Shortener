@@ -7,6 +7,7 @@ import {
   IconButton,
   InputAdornment,
   Typography,
+  CircularProgress,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import toast from 'react-hot-toast';
@@ -19,6 +20,7 @@ const UrlForm: React.FC = () => {
   const [validityOption, setValidityOption] = useState<number | 'custom'>(1);
   const [customDays, setCustomDays] = useState<number>(5);
   const [shortLink, setShortLink] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (!url.trim()) {
@@ -35,12 +37,15 @@ const UrlForm: React.FC = () => {
     const validityMinutes = finalDays * 24 * 60;
 
     try {
+      setLoading(true);
       const data = await createShortUrl(url, validityMinutes);
       setShortLink(data.shortLink);
       toast.success('Short URL created!');
     } catch (error: any) {
       const msg = error?.response?.data?.error || 'Something went wrong.';
       toast.error(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,8 +57,9 @@ const UrlForm: React.FC = () => {
   return (
     <Box display="flex" flexDirection="column" gap={2}>
       <Typography variant="h6" color="primary">
-          Shorten your URL
-        </Typography>
+        Shorten your URL
+      </Typography>
+
       <TextField
         label="Enter Long URL"
         variant="outlined"
@@ -91,12 +97,19 @@ const UrlForm: React.FC = () => {
         />
       )}
 
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Shorten URL
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSubmit}
+        disabled={loading}
+        startIcon={loading && <CircularProgress size={20} color="inherit" />}
+      >
+        {loading ? 'Creating...' : 'Shorten URL'}
       </Button>
 
       {shortLink && (
-        <Box>
+        <Box display="flex" flexDirection="column" gap={2}>
+          {/* Short Link Display */}
           <TextField
             label="Short URL"
             value={shortLink}
@@ -112,13 +125,38 @@ const UrlForm: React.FC = () => {
               ),
             }}
           />
-          <Typography variant="caption" color="gray" mt={1}>
+
+          {/* Shortcode Display */}
+          <TextField
+            label="Shortcode"
+            value={shortLink.split('/').pop() || ''}
+            fullWidth
+            InputProps={{
+              readOnly: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => {
+                      const code = shortLink.split('/').pop() || '';
+                      navigator.clipboard.writeText(code);
+                      toast.success('Shortcode copied!');
+                    }}
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          <Typography variant="caption" color="gray">
             This link will expire in{' '}
             {validityOption === 'custom' ? customDays : validityOption} day
-            {validityOption === 1 ? '' : 's'}.
+            {(validityOption === 1 || customDays === 1) ? '' : 's'}.
           </Typography>
         </Box>
       )}
+
     </Box>
   );
 };

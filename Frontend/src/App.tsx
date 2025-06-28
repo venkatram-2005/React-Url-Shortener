@@ -45,7 +45,7 @@ const App = () => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            🔗 URL Shortener
+            🔗 React URL Shortener
           </Typography>
           <IconButton color="inherit" onClick={toggleTheme}>
             {mode === 'light' ? <Brightness4 /> : <Brightness7 />}
