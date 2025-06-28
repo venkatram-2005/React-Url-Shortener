@@ -8,6 +8,7 @@ import {
   ListItem,
   Divider,
   Paper,
+  CircularProgress,
 } from '@mui/material';
 import toast from 'react-hot-toast';
 import { getStats } from '../services/api';
@@ -15,6 +16,7 @@ import { getStats } from '../services/api';
 const UrlStats: React.FC = () => {
   const [shortcode, setShortcode] = useState('');
   const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFetchStats = async () => {
     if (!shortcode.trim()) {
@@ -23,12 +25,15 @@ const UrlStats: React.FC = () => {
     }
 
     try {
+      setLoading(true);
       const data = await getStats(shortcode.trim());
       setStats(data);
       toast.success('Stats fetched!');
     } catch (err: any) {
       toast.error(err?.response?.data?.error || 'Could not fetch stats');
       setStats(null);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -46,9 +51,21 @@ const UrlStats: React.FC = () => {
         fullWidth
       />
 
-      <Button variant="contained" color="secondary" onClick={handleFetchStats}>
-        Get Stats
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleFetchStats}
+        disabled={loading}
+        startIcon={loading && <CircularProgress size={20} color="inherit" />}
+      >
+        {loading ? 'Fetching...' : 'Get Stats'}
       </Button>
+
+      {loading && (
+        <Typography variant="body2" color="text.secondary">
+          Fetching stats, please wait...
+        </Typography>
+      )}
 
       {stats && (
         <Paper elevation={3} sx={{ padding: 2, mt: 2 }}>
