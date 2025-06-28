@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler } from "express";
+import express, { Request, Response, ErrorRequestHandler } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -16,6 +16,10 @@ app.use(cors());
 
 app.use("/shorturls", shortUrlRoutes);
 app.get("/:shortcode", handleRedirect);
+
+app.get('/', (req: Request, res: Response) => {
+  res.send("API is working fine...");
+});
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.error("Unhandled Error:", err);
